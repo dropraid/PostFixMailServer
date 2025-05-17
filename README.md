@@ -94,12 +94,33 @@ Restart Dovecot
 sudo systemctl restart dovecot
 ```
 ## Step 6: Get SSL (Optional)
+After this command, wait 5-10 minutes before press Enter
 ```bash
-sudo apt install certbot -y
-sudo certbot certonly --standalone -d mail.YOURDOMAIN
+sudo certbot certonly --manual --preferred-challenges dns -d mail.dropraid.xyz
 ```
-Renewal auto-set. Use in Postfix + Dovecot configs as shown earlier.
-
+Please deploy a DNS TXT record in DNS provider under the name:
+Type: TXT Record
+Host: _acme-challenge.mail
+Value: QWERTY1234....abc(Value provided in the command above)
+Certbot will verify the record and if successful, you’ll see:
+```bash
+Congratulations! Your certificate and chain have been saved at:
+/etc/letsencrypt/live/mail.dropraid.xyz/fullchain.pem
+/etc/letsencrypt/live/mail.dropraid.xyz/privkey.pem
+```
+Edit your `/etc/postfix/main.cf` and update the TLS paths:
+```bash
+smtpd_tls_cert_file=/etc/letsencrypt/live/mail.dropraid.xyz/fullchain.pem
+smtpd_tls_key_file=/etc/letsencrypt/live/mail.dropraid.xyz/privkey.pem
+```
+Reload Postfix & Dovecot
+```bash
+sudo systemctl reload postfix
+sudo systemctl reload dovecot
+```
+REMEMBER Encrypted certificates are valid for 90 days. Repeat the same manual process every 60-80 days.
+Or switch to a DNS plugin with API if you use Cloudflare or another provider with automation
+(Namecheap doesn't support API automation unless you use third-party tools)
 ## Testing
 Test sending mail, from the server
 ```bash
