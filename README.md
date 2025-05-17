@@ -135,3 +135,25 @@ To read mail with user1
 su user1
 mail
 ```
+Using `mailutils` auto delete mail after read or sent so I will show you guide to configure Postfix & Dovecot for Maildir and use Mutt
+Edit your `/etc/postfix/main.cf`
+Make sure these lines are set or add
+```bash
+home_mailbox = Maildir/
+```
+Run as your mail user (e.g., shadowfiend)
+```bash
+mkdir -p ~/Maildir/{cur,new,tmp}
+chmod -R 700 ~/Maildir
+```
+Configure Dovecot to use Maildir `sudo nano /etc/dovecot/conf.d/10-mail.conf`
+Find the line with `mail_location` and set it like this:
+`mail_location = maildir:~/Maildir`
+Restart Postfix and Dovecot
+Install and use mutt for reading mail
+```bash
+sudo apt update
+sudo apt install mutt
+```
+Open mail box with `mutt` or go directly to  folder `Maildir/new` to read
+
