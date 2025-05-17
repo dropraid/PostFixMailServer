@@ -52,7 +52,7 @@ Dovecot will deliver to /var/mail/user1
 ## Step 4: Configure PostFix
 Edit `/etc/postfix/main.cf`, add or ensure:
 ```bash
-myhostname = mail.YOURDOMAIN
+myhostname = YOURDOMAIN
 mydomain = YOURDOMAIN
 myorigin = /etc/mailname
 inet_interfaces = all
